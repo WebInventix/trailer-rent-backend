@@ -139,7 +139,7 @@ const login_user = async (req, res, next) => {
     if (validation_error) {
       return next(validation_error);
     }
-    const find_user = await User_Auth_Schema.findOne({ email }).populate('store_id');
+    const find_user = await User_Auth_Schema.findOne({ email });
     if (!find_user) {
       const error = {
         status: 401,
@@ -148,10 +148,7 @@ const login_user = async (req, res, next) => {
       return next(error);
     }
 
-    if(find_user.approved_status=="Requested" || find_user.approved_status=="Decline")
-    {
-      return res.status(401).json({message:`Restricted!. Your Status is ${find_user.approved_status}, Contact Admin`})
-    }
+ 
     const compare_password = await Bcrypt_Service.bcrypt_compare_password(
       password,
       find_user.password
