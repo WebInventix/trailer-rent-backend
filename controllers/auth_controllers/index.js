@@ -427,6 +427,65 @@ const resetPassword = async (req,res) => {
   await user.save();
   return res.status(200).json({success:true,message:"Password reset successfully"})
 }
+
+
+const kycVerification = async (req, res, next) => {
+  const { user_id } = req; // Extract user_id from request
+  const {
+    avatar,
+    email_notifications,
+    number_notifications,
+    transmission,
+    driving_license,
+    id_card,
+    insurance_card,
+    registration_card
+  } = req.body; // Extract fields from the body
+
+  try {
+    // Find the user by ID
+    var user = await User_Auth_Schema.findById(user_id);
+
+    // If the user doesn't exist, return an error
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the fields if they exist in the request body
+    user.avatar = avatar || user.avatar;
+    user.email_notifications = email_notifications || user.email_notifications;
+    user.number_notifications = number_notifications || user.number_notifications;
+    user.transmission = transmission || user.transmission;
+    user.driving_license = driving_license || user.driving_license;
+    user.id_card = id_card || user.id_card;
+    user.insurance_card = insurance_card || user.insurance_card;
+    user.registration_card = registration_card || user.registration_card;
+
+    // Check if any required field is missing and set the KYC status accordingly
+    if (
+      !user.avatar ||
+      !user.transmission ||
+      !user.driving_license ||
+      !user.id_card ||
+      !user.insurance_card ||
+      !user.registration_card
+    ) {
+      user.kyc = 'Pending';
+    } else {
+      user.kyc = 'Completed';
+    }
+
+    // Save the updated user data to the database
+    await user.save();
+
+    // Return the updated user data
+    return res.status(200).json({ message: "KYC updated successfully", user });
+  } catch (error) {
+    // Pass any error to the error handler middleware
+    return next(error);
+  }
+};
+
 module.exports = {
   register_user,
   login_user,
@@ -438,6 +497,7 @@ module.exports = {
   verify_reset_password_OTP,
   verfiyUser,
   resetPassword,
-  resendCodes
+  resendCodes,
+  kycVerification
 
 };
