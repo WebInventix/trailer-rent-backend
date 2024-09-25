@@ -20,6 +20,10 @@ class JOI_Service {
         return Joi.string()
         .required()
     }
+    static joi_role_pattern() {
+        return Joi.string()
+        .required()
+    }
     static joi_last_name_pattern() {
         return Joi.string()
         .required()
@@ -56,6 +60,7 @@ class JOI_Validations {
         const userRegisterSchema = Joi.object({
             email: JOI_Service.joi_email_string(),
             password: JOI_Service.joi_password_pattern(),
+            role: JOI_Service.joi_role_pattern()
         })
         const { error } = userRegisterSchema.validate(payload);
         return error
