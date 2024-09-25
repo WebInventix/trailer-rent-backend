@@ -8,6 +8,7 @@ const { User_Tokens_Schema } = require("../../models/user_tokens_model");
 const { generateOtp } = require("../../utils/generate_OTP");
 const {sendverficationCode, forgotOtp} = require("../../utils/email");
 const verifyEmailSchema = require("../../models/verification/verifyEmailTokenSchema");
+const { Verifications } = require("../../models/verification")
 const twilioClient = require('../../config/twilioConfig');
 // const googleClient = require('../../config/googleConfig');
 
@@ -15,7 +16,7 @@ const twilioClient = require('../../config/twilioConfig');
 
 
 const register_user = async (req, res, next) => {
-  const { body, user_id } = req;
+  const { body} = req;
   try {
     const {
       email,
@@ -27,15 +28,15 @@ const register_user = async (req, res, next) => {
       status,
       send_promotions
     } = body;
-    // 2. if error in validation -> return error via middleware
-    if(role=="User")
-    {
+
       if(!email || !password || !phonenumber || !role || !first_name || !last_name || !status)
-        {
-          return res.json({message:'Fill the required fields'},401)
-        }
-    }
-    
+      {
+        console.log(email,password,phonenumber,role,first_name,last_name,status)
+        return res.status(401).json({message:'Fill the required fields'})
+      }
+      
+    const codes = {emcode: Math.floor(100 + Math.random() * 900), mocode: Math.floor(100 + Math.random() * 900) }
+ 
 
     const is_email_exist = await User_Auth_Schema.exists({ email });
     if (is_email_exist) {
@@ -60,7 +61,22 @@ const register_user = async (req, res, next) => {
     const save_user = await User_Auth_Schema.create({
       ...store_user_data,
     });
+    if(save_user)
+    {
+      let sv_email_code = await Verifications.create({
+        user_id:save_user._id, type:'Email',code:codes.emcode
+      })
+      let sv_mobile_code = await Verifications.create({
+        user_id:save_user._id, type:'Number',code:codes.mocode
+      })
+      let send_email_code = await sendverficationCode(save_user.email, codes.emcode)
+      // let verificationCodeStatus = await twilioClient.messages.create({
+      //   body: `Your verification code is ${codes.mocode}`,
+      //   from: process.env.TWILIO_PHONE_NUMBER,
+      //   to: save_user.phonenumber
+      // });
 
+    }
     const user_dto = new User_DTO(save_user);
 
     const generate_tokens = await JWT_Generate_Token_Handle.save_user_tokens(
@@ -78,17 +94,11 @@ const register_user = async (req, res, next) => {
       ...user_dto
     };
 
-    //Twilio Code
-    // let verificationCodeStatus = await twilioClient.messages.create({
-    //     body: `Your verification code is ${verificationCode}`,
-    //     from: process.env.TWILIO_PHONE_NUMBER,
-    //     to: phonenumber
-    //   });
-    //await sendverficationCode(email,verificationCode)
     return res.json({
       message: "Registered successfully!",
       data: send_data,
       tokens: tokens_dto,
+      codes:codes
     });
   } catch (error) {
     return next(error);
@@ -97,38 +107,56 @@ const register_user = async (req, res, next) => {
 // ============= Verfi User ============ //
 
 const verfiyUser = async (req, res) => {
-  const { code,type } = req.body
-  if(!code)
+  const { emcode,mocode } = req.body
+  const {user_id} = req
+  if(!emcode || !mocode)
   {
     return res.json({message:"No code found",status:401})
   }
 
-  var user = await User_Auth_Schema.findOne({"verficationcode":code})
-  if(!user)
+  let emailVer = await Verifications.findOne({user_id:user_id, type:'Email', code:emcode})
+  let numVer = await Verifications.findOne({user_id:user_id,type:'Number',code:mocode})
+  if(emailVer && numVer)
   {
-    return res.json({message:"No user found",status:401})
+    var user = await User_Auth_Schema.findById(user_id)
+    user.number_verified = true
+    user.email_verified = true
+    user.save()
+    await Verifications.deleteMany({ user_id: user_id });
+    return res.status(200).json({message:"Verified Successfully!"})
   }
   else
   {
-    
-    user.verficationcode = null
-    user.verified = true
-    var userVerified = await user.save();
-    if(userVerified)
-    {
-      if(type=="verify")
-      {
-        return res.status(200).json({message:"User verified successfully"})
-      }
-      else if(type=="forgot")
-      {
-        return res.status(200).json({message:"Code Verified",user:user._id})
-      }
-    }
+    return res.status(401).json({message:"Verification Failed!"})
   }
-  return res.json({message:"User not verified"},401)
-}
 
+}
+//============ Resend Verifications ===========//
+
+const resendCodes = async (req,res,next)=>{
+  const {user_id, user_data} = req
+  try {
+    const codes = {emcode: Math.floor(100 + Math.random() * 900), mocode: Math.floor(100 + Math.random() * 900) }
+    let sv_email_code = await Verifications.create({
+      user_id:user_id, type:'Email',code:codes.emcode
+    })
+    let sv_mobile_code = await Verifications.create({
+      user_id:user_id, type:'Number',code:codes.mocode
+    })
+    let send_email_code = await sendverficationCode(user_data.email, codes.emcode)
+    // let verificationCodeStatus = await twilioClient.messages.create({
+    //   body: `Your verification code is ${codes.mocode}`,
+    //   from: process.env.TWILIO_PHONE_NUMBER,
+    //   to: save_user.phonenumber
+    // });
+    return res.status(200).json({
+      message: "Code Sent successfully!",
+      codes:codes
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
 // ============= Login   ================ //
 const login_user = async (req, res, next) => {
   const { body } = req;
@@ -407,6 +435,7 @@ module.exports = {
   verify_OTP_and_create_password,
   verify_reset_password_OTP,
   verfiyUser,
-  resetPassword
+  resetPassword,
+  resendCodes
 
 };

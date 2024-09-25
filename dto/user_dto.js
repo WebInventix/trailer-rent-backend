@@ -3,7 +3,7 @@ class User_DTO{
         this._id = user._id;
         this.email = user.email;
         this.role = user.role;
-        this.approved_status= user.approved_status;
+        this.status= user.status;
     }
 }
 

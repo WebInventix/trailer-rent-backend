@@ -36,6 +36,46 @@ const User_Auth_Schema = mongoose.model('user', new Schema({
         default: false,
         required:false
     },
+    number_verified:{
+        type: Boolean,
+        default: false,
+        required:false
+    },
+    email_verified:{
+        type: Boolean,
+        default: false,
+        required:false
+    },
+    email_notifications:{
+        type: Boolean,
+        default: false,
+        required:false
+    },
+    number_notifications:{
+        type: Boolean,
+        default: false,
+        required:false
+    },
+    transmission:{
+        type: Boolean,
+        required:false
+    },
+    driving_license: {
+        type: String,
+        required: false
+    },
+    id_card: {
+        type: String,
+        required: false
+    },
+    insurance_card: {
+        type: String,
+        required: false
+    },
+    registration_card: {
+        type: String,
+        required: false
+    },
     status: {
         type: String,
         enum:['Approved','Requested','Decline','Deleted'],
