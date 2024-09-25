@@ -1,5 +1,6 @@
 const express = require('express');
-const { check_auth_controller, renew_token_controller, logout_controller } = require('../../controllers/auth_controllers');
+const { check_auth_controller, renew_token_controller, logout_controller, verfiyUser, resendCodes } = require('../../controllers/auth_controllers');
+const { kycVerification } = require('../../controllers/host_controllers/profile');
 const router = express.Router()
 
 
@@ -7,7 +8,9 @@ const router = express.Router()
 router.get('/check-auth', check_auth_controller)
 router.post('/renew-token', renew_token_controller)
 router.post('/logout', logout_controller)
-
+router.post('/code-verification', verfiyUser)
+router.get('/resend-codes', resendCodes)
+router.post('/kyc-verification',kycVerification)
 
 
 
