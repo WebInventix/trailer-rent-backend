@@ -160,14 +160,16 @@ const resendCodes = async (req,res,next)=>{
 // ============= Login   ================ //
 const login_user = async (req, res, next) => {
   const { body } = req;
+  // console.log(body)
+  // return res.status(200).json(body)
   try {
-    const { email, password } = body;
+    const { email, password , role} = body;
     // 2. if error in validation -> return error via middleware
     const validation_error = JOI_Validations.user_login_joi_validation(body);
     if (validation_error) {
       return next(validation_error);
     }
-    const find_user = await User_Auth_Schema.findOne({ email });
+    const find_user = await User_Auth_Schema.findOne({ email , role});
     if (!find_user) {
       const error = {
         status: 401,
