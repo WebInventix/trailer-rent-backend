@@ -78,8 +78,8 @@ const User_Auth_Schema = mongoose.model('user', new Schema({
     },
     kyc:{
         type: String,
-        enum:['Pending','Completed'],
-        default:'Pending',
+        enum:['None','Pending','Completed'],
+        default:'None',
         required:true
     },
     status: {
