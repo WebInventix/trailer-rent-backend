@@ -52,9 +52,9 @@ const createBank = async (req, res) => {
         }
 
         // Optional: Add other validations as necessary (e.g., SSN format)
-        if (!/^\d{3}-\d{2}-\d{4}$/.test(SSN)) {
-            return res.status(400).json({ message: "Invalid SSN format. Correct format is XXX-XX-XXXX." });
-        }
+        // if (!/^\d{3}-\d{2}-\d{4}$/.test(SSN)) {
+        //     return res.status(400).json({ message: "Invalid SSN format. Correct format is XXX-XX-XXXX." });
+        // }
 
         // If all validations pass, create the bank record
         const newBank = new Banks(req.body);
@@ -116,9 +116,9 @@ const updateBank = async (req, res) => {
         }
 
         // Validate SSN format (example for US SSNs)
-        if (!/^\d{3}-\d{2}-\d{4}$/.test(SSN)) {
-            return res.status(400).json({ message: "Invalid SSN format. Correct format is XXX-XX-XXXX." });
-        }
+        // if (!/^\d{3}-\d{2}-\d{4}$/.test(SSN)) {
+        //     return res.status(400).json({ message: "Invalid SSN format. Correct format is XXX-XX-XXXX." });
+        // }
 
         // Find the bank account by ID and update it
         const updatedBank = await Banks.findByIdAndUpdate(
