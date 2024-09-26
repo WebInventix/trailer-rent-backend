@@ -13,8 +13,19 @@ const generateUniquePid = () => {
 
 
 const userListing = async (req,res) => {
+    const {role} = req.params
+    
     try {
-        const user = await User_Auth_Schema.find().select("-password");
+        let user;
+        if(!role)
+        {
+            user = await User_Auth_Schema.find().select("-password");
+        }
+        else
+        {
+            user = await User_Auth_Schema.find({role:role}).select("-password")
+        }
+        
         res.json(user);
 
         
@@ -38,8 +49,25 @@ const userDetailsById = async (req, res) => {
     }
 }
 
+const approveUser = async (req,res) => {
+    const {userId, status} =req.body
+    try {
+        const user = await User_Auth_Schema.findById(userId)
+        if(!user) {
+            return res.status(404).json({ message: "User not found" });
+            }
+            user.status = status
+            await user.save()
+            res.json({message:'Status Updated', user})
+        
+    } catch (error) {
+        return res.status(500).json({message:error.message})
+        
+    }
+}
 
 module.exports = {
     userListing,
-    userDetailsById
+    userDetailsById,
+    approveUser
 };
