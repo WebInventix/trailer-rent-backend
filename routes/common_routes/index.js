@@ -1,6 +1,5 @@
 const express = require('express');
-const { check_auth_controller, renew_token_controller, logout_controller, verfiyUser, resendCodes } = require('../../controllers/auth_controllers');
-const { kycVerification } = require('../../controllers/host_controllers/profile');
+const { check_auth_controller, renew_token_controller, logout_controller, verfiyUser, resendCodes, kycVerification } = require('../../controllers/auth_controllers');
 const router = express.Router()
 
 
