@@ -4,6 +4,7 @@ class User_DTO{
         this.email = user.email;
         this.role = user.role;
         this.status= user.status;
+        this.kyc = user.kyc
     }
 }
 
