@@ -486,6 +486,21 @@ const kycVerification = async (req, res, next) => {
   }
 };
 
+const getProfile = async(req,res)=>{
+  const {user_id} = req
+  try {
+    const user = await User_Auth_Schema.findById(user_id).select('-password')
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+      }
+      return res.status(200).json({ message: "User profile retrieved successfully", user });
+    
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+    
+  }
+}
+
 module.exports = {
   register_user,
   login_user,
@@ -498,6 +513,7 @@ module.exports = {
   verfiyUser,
   resetPassword,
   resendCodes,
-  kycVerification
+  kycVerification,
+  getProfile
 
 };
