@@ -166,7 +166,7 @@ const getBanks = async  (req, res) => {
 
 const updateProfile = async (req, res) => {
     const { user_id } = req;  // Extract user ID from the request (make sure it's being passed correctly)
-    const { first_name, last_name, phonenumber, email, email_notifications, number_notifications } = req.body;
+    const { first_name, last_name, phonenumber, email, email_notifications, number_notifications, avatar } = req.body;
 
     try {
         // Find the user by ID and update with new data
@@ -178,7 +178,8 @@ const updateProfile = async (req, res) => {
                 phonenumber,
                 email,
                 email_notifications,
-                number_notifications
+                number_notifications,
+                avatar
             },
             { 
                 new: true, // Return the updated document
