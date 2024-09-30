@@ -1,5 +1,5 @@
 const express = require("express");
-const {createBank,updateBank, getBanks, updateProfile} = require("../../controllers/host_controllers/index")
+const {createBank,updateBank, getBanks, updateProfile, dashboard} = require("../../controllers/host_controllers/index")
 const {addTrailer,getTrailerById,getTrailersByStatus,editTrailer} = require("../../controllers/host_controllers/trailerController")
 
 const router = express.Router();
@@ -7,10 +7,12 @@ const router = express.Router();
 router.post('/add-account', createBank)
 router.post('/update-bank-account/:id', updateBank)
 router.get('/bank-list', getBanks)
+router.get('/dashboard',dashboard)
 router.post('/update-profile', updateProfile)
 router.post('/add-trailer', addTrailer)
 router.get('/trailers/:id', getTrailerById)
 router.get('/trailers/status/:status', getTrailersByStatus);
+router.post('/trailer/:id', editTrailer)
 
 
 

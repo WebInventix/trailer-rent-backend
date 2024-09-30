@@ -13,9 +13,13 @@ const addTrailer = async (req,res) => {
         const savedTrailer = await trailer.save();
         return res.status(200).json({message:'Created',trailer:savedTrailer})
     } catch (error) {
-        throw new Error(`Failed to create trailer: ${error.message}`);
+        return res.status(500).json({message:error.message})
     }
 }
+
+
+
+
 const getTrailerById = async (req, res) => {
     const { id } = req.params;  // Assuming `id` is passed as a URL parameter
     try {
@@ -86,3 +90,15 @@ module.exports = {
     getTrailersByStatus,
     editTrailer
 };
+
+
+
+
+
+
+
+
+
+
+
+
