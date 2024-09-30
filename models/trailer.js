@@ -134,6 +134,7 @@ const Trailers = mongoose.model('trailers', new Schema({
     approve_status: {
         type: String,
         enum: ['Approved', 'Pending', 'Rejected'],
+        default:'Pending'
     },
     status: {
         type: String,
