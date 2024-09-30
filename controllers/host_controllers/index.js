@@ -1,8 +1,23 @@
 const mongoose = require('mongoose');
 const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Banks } = require("../../models/Banks")
+const { Trailers } = require("../../models/trailer")
 
 
+const dashboard = async (req,res) => {
+    const {user_id} = req
+    try {
+        const trailers = await Trailers.find({host_id:user_id})
+        console.log(user_id,trailers)
+        let trailer_count = trailers.length
+        return res.status(200).json({message:'Dashboard',trailer_count:trailer_count})
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({message:error.message})
+        
+    }
+}
 
 const createBank = async (req, res) => {
     try {
@@ -202,5 +217,6 @@ module.exports = {
     createBank,
     updateBank,
     getBanks,
-    updateProfile
+    updateProfile,
+    dashboard
 };

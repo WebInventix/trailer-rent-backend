@@ -30,18 +30,18 @@ const Trailers = mongoose.model('trailers', new Schema({
         required:true,
     },
     category: {
-        type: String,
+        type: [String],
         enum:['Enclosed Trailer Rentals','Dump Trailer Rentals','Flatbed Trailer Rentals','Horse Trailer Rentals', 'Motorcycle Trailer Rentals', 'Semi Trailer Rentals', 'Speciality Trailer Rentals','Utility Trailer Rentals', 'Car Hauler Trailer Rentals', 'Boat Trailer Rentals', 'Tow Dolly Trailer Rentals', 'Cargo Trailer Rental'],
         required: true,
 
     },
     hitch_type: {
-        type: String, 
+        type: [String], 
         enum: ['Other', 'Fifth Wheel', 'Gooseneck', 'Pintle', 'Bumper Pull'],  // Enum options for hitch types
         required: true,  // Set to true if hitch_type is mandatory
     },
     ball_size: {
-        type: String,
+        type: [String],
         enum:['3 inch','2-5/16 inch','2 inch','1-7/8 inch','Pintle','Fith Wheel'],
         required: false,
     },
@@ -67,7 +67,7 @@ const Trailers = mongoose.model('trailers', new Schema({
         required:false
     },
     axles: {
-        type:String,
+        type:[String],
         enum:['1-2000lb','2-1x3500lb','3-1x5000lb','4-2x3500lb','5-2x5000lb','6-2x7000lb','7-2x10000lb','8-2x12000lb','9-other'],
         required:false
     },
