@@ -23,7 +23,7 @@ const addTrailer = async (req,res) => {
 const getTrailerById = async (req, res) => {
     const { id } = req.params;  // Assuming `id` is passed as a URL parameter
     try {
-      const trailer = await Trailers.findOne({ trailer_id: id });
+      const trailer = await Trailers.findOne({ trailer_id: id }).populate('host_id');
       
       // Check if the trailer exists
       if (!trailer) {
