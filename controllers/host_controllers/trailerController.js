@@ -59,6 +59,18 @@ const getTrailerById = async (req, res) => {
   };
 
 
+  const getAllTrailers = async(req,res) => {
+    const {user_id} = req
+    try {
+      trailers = await Trailers.find({host_id:user_id})
+        return res.status(200).json({message: 'Trailers found', trailers})
+      
+    } catch (error) {
+      return res.status(500).json({message: `Failed to retrieve trailers: ${error.message }`})
+      
+    }
+  }
+
 
   const editTrailer = async (req, res) => {
     const { id } = req.params; // Assuming `id` is the trailer_id passed as a URL parameter
@@ -88,7 +100,8 @@ module.exports = {
     addTrailer,
     getTrailerById,
     getTrailersByStatus,
-    editTrailer
+    editTrailer,
+    getAllTrailers
 };
 
 

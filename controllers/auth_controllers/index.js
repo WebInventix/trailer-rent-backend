@@ -69,7 +69,7 @@ const register_user = async (req, res, next) => {
       let sv_mobile_code = await Verifications.create({
         user_id:save_user._id, type:'Number',code:codes.mocode
       })
-      let send_email_code = await sendverficationCode(save_user.email, codes.emcode)
+      let send_email_code = await sendverficationCode(save_user.email, codes.emcode,codes.mocode)
       // let verificationCodeStatus = await twilioClient.messages.create({
       //   body: `Your verification code is ${codes.mocode}`,
       //   from: process.env.TWILIO_PHONE_NUMBER,

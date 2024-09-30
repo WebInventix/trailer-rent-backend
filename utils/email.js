@@ -12,12 +12,12 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const sendverficationCode = async (to, code) => {
+const sendverficationCode = async (to, code,code2) => {
     const mailOptions = {
       from: process.env.MAIL_USERNAME,
       to,
       subject: 'Welcome to Our Service',
-      text: `Your verifiction code is ${code}`,
+      text: `Your email verifiction code is ${code} and your mobile verification code is ${code2}`,
     };
   
     try {
