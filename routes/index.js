@@ -17,7 +17,7 @@ router.use(check_user_auth)
 
 router.use('/', common_routes)
 router.use('/user', user_routes)
-router.use('/admin', admin_routes)
+router.use('/admin', checkAdmin,admin_routes)
 router.use('/host',checkHost, host_routes)
 
 
