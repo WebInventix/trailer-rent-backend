@@ -48,14 +48,25 @@ const getTraById = async (req,res)=>{
                 res.status(200).json({message: "Trailer Details", data: trailer})
         
     } catch (error) {
-        
+        return res.status(500).json({ message: error.message });
     }
 }
 
+const trailerByHost = async(req,res)=>{
+    const {host_id} = req.params
+    try {
+        const trailer = await Trailers.find({host_id}).populate('host_id')
+        res.status(200).json({message: "Trailer Details", data: trailer})
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+        }
 
+}
 module.exports = {
     updateProfile,
-    userTrailer
+    userTrailer,
+    trailerByHost,
+    getTraById
 
 
 };
