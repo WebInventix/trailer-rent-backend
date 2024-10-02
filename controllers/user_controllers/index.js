@@ -1,7 +1,6 @@
 const { User_Auth_Schema } = require("../../models/user_auth_model");
-const { Orders } = require("../../models/orders");
-const { Products } = require("../../models/products");
- 
+const { Trailers } = require("../../models/trailer")
+
 const updateProfile = async (req,res) => {
     const {body, user_id} = req
     const {name,email,phonenumber,store_id,avatar} = body
@@ -26,9 +25,37 @@ const updateProfile = async (req,res) => {
 } 
 
 
+const userTrailer = async (req,res)=>{
+    try {
+        const trailers = await Trailers.find()
+        res.status(200).json({message: "Trailer List", data: trailers})
+        
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+        
+    }
+
+}
+
+const getTraById = async (req,res)=>{
+    const {id} = req.params
+    try {
+        const trailer = await Trailers.findById(id)
+        if(!trailer)
+            {
+                return res.status(404).json({ message: "Trailer not found" });
+            }
+                res.status(200).json({message: "Trailer Details", data: trailer})
+        
+    } catch (error) {
+        
+    }
+}
+
 
 module.exports = {
     updateProfile,
+    userTrailer
 
 
 };
