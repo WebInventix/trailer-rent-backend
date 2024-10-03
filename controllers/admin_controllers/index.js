@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const { User_Auth_Schema } = require("../../models/user_auth_model");
-
+const { Trailers  } = require("../../models/trailer");
 
 
 
@@ -11,6 +11,15 @@ const generateUniquePid = () => {
     return `PID${uniqueId}`;
 };
 
+
+const getTrailer = async (req,res ) => {
+    try {
+        let trailers = await Trailers.find().populate('host_id')
+        return res.status(200).json({message:"Listing",trailers:trailers})
+    } catch (error) {
+        return res.status(500).json({message:"Error",error:error.message})
+    }
+}
 
 const userListing = async (req,res) => {
     const {role} = req.params
@@ -69,5 +78,6 @@ const approveUser = async (req,res) => {
 module.exports = {
     userListing,
     userDetailsById,
-    approveUser
+    approveUser,
+    getTrailer
 };
