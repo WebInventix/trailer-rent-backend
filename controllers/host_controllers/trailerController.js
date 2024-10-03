@@ -3,23 +3,41 @@ const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Trailers } = require("../../models/trailer")
 const { v4: uuidv4 } = require('uuid');
 
-const addTrailer = async (req,res) => {
-  const  {body,user_id} = req
-    try{
-        let data = body
-        data.trailer_id= `Tra-${uuidv4()}`;
-        data.host_id = user_id
-        const trailer = new Trailers(data);
-        const savedTrailer = await trailer.save();
-        return res.status(200).json({message:'Created',trailer:savedTrailer})
-    } catch (error) {
-        return res.status(500).json({message:error.message})
-    }
-}
+const addTrailer = async (req, res) => {
+  const { body, user_id } = req;
+  try {
+      let data = body;
+
+      // Function to generate random letters
+      const generateRandomLetters = (length) => {
+          const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+          let result = '';
+          for (let i = 0; i < length; i++) {
+              result += letters.charAt(Math.floor(Math.random() * letters.length));
+          }
+          return result;
+      };
+
+      // Generate random 2-letter string and a random 3-digit number
+      const randomLetters = generateRandomLetters(2); // Generates two random uppercase letters
+      const randomNumber = Math.floor(Math.random() * 900) + 100; // Generates a random number between 100 and 999
+
+      // Combine the parts into the trailer_id
+      data.trailer_id = `Tra-${randomLetters}${randomNumber}`;
+      data.host_id = user_id;
+
+      const trailer = new Trailers(data);
+      const savedTrailer = await trailer.save();
+
+      return res.status(200).json({ message: 'Created', trailer: savedTrailer });
+  } catch (error) {
+      return res.status(500).json({ message: error.message });
+  }
+};
 
 
 
-
+  
 const getTrailerById = async (req, res) => {
     const { id } = req.params;  // Assuming `id` is passed as a URL parameter
     try {
