@@ -21,6 +21,32 @@ const getTrailer = async (req,res ) => {
     }
 }
 
+const trailerByID = async (req,res) => {
+    const {id} = req.params
+    try {
+        let trailer = await Trailers.findById(id).populate('host_id')
+        if(!trailer) { return res.status(404).json({message:"Trailer not found"}) }
+        return res.status(200).json({message:"Trailer found",trailer:trailer})
+
+    }
+    catch (error) {
+        return res.status(500).json({message:"Error",error:error.message})
+    }
+}
+
+const trailerByHostId = async(req,res)=> {
+    const {id} = req.params
+    try {
+        let host = await User_Auth_Schema.findById(id).select("-password")
+        let trailer = await Trailers.find({host_id:id}).populate('host_id')
+        if(!trailer) { return res.status(404).json({message:"Trailer not"})}
+        return res.status(200).json({message:"Trailer found",trailer:trailer,host:host})
+        }
+        catch (error) {
+            return res.status(500).json({message:"Error",error:error.message})
+            }
+}
+
 const userListing = async (req,res) => {
     const {role} = req.params
     
@@ -79,5 +105,7 @@ module.exports = {
     userListing,
     userDetailsById,
     approveUser,
-    getTrailer
+    getTrailer,
+    trailerByID,
+    trailerByHostId
 };
