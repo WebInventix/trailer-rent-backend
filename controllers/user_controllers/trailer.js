@@ -27,23 +27,8 @@ const getcordinates  = async (req,res) => {
     }
 }
 const userTrailerbyCategory = async (req,res)=>{
-    const  {category} = req.body;
+    const { minPrice, maxPrice, minLength, maxLength, minWeight, maxWeight, hitchType, category, location } = req.body;
 
-    try {
-        const trailers =  await Trailers.find({category:category}).populate('host_id')
-        const total = trailers.length
-        console.log(total)
-        res.status(200).json({message: "Trailer List", data: {trailers,total}})
-        
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-        
-    }
-
-}
-
-const trailerSearch = async (req,res) => {
-    const { minPrice, maxPrice, minLength, maxLength, minWeight, maxWeight, hitchType, category } = req.body;
 
     // Build query based on provided filters
     const query = {};
@@ -65,6 +50,51 @@ const trailerSearch = async (req,res) => {
     }
     if(category){
         query.category = category
+    }
+    if (location) {
+        // Use a case-insensitive regex to search for the location in complete_address
+        query.complete_address = { $regex: location, $options: 'i' };
+    }
+
+    try {
+        // Fetch trailers matching the query
+        const trailers = await Trailers.find(query);
+        res.json(trailers);
+    } catch (error) {
+        console.error("Error fetching trailers:", error);
+        res.status(500).json({ error: "Failed to fetch trailers" });
+    }
+
+}
+
+const trailerSearch = async (req,res) => {
+    const { minPrice, maxPrice, minLength, maxLength, minWeight, maxWeight, hitchType, category, location } = req.body;
+
+
+    // Build query based on provided filters
+    const query = {};
+
+    if (minPrice && maxPrice) {
+        query.daily_rate = { $gte: minPrice, $lte: maxPrice };
+    }
+
+    if (minLength && maxLength) {
+        query.trailer_length = { $gte: minLength, $lte: maxLength };
+    }
+
+    if (minWeight && maxWeight) {
+        query.payload_capacity = { $gte: minWeight, $lte: maxWeight };
+    }
+
+    if (hitchType) {
+        query.hitch_type = hitchType;
+    }
+    if(category){
+        query.category = category
+    }
+    if (location) {
+        // Use a case-insensitive regex to search for the location in complete_address
+        query.complete_address = { $regex: location, $options: 'i' };
     }
 
     try {
