@@ -40,7 +40,7 @@ const userTrailer = async (req,res)=>{
 const getTraById = async (req,res)=>{
     const {id} = req.params
     try {
-        const trailer = await Trailers.findById(id)
+        const trailer = await Trailers.findById(id).populate('host_id')
         if(!trailer)
             {
                 return res.status(404).json({ message: "Trailer not found" });
