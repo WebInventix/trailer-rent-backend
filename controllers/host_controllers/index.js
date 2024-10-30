@@ -213,10 +213,52 @@ const updateProfile = async (req, res) => {
     }
 };
 
+
+const updateBankStatus = async (req, res) => {
+    const { bank_id, is_active } = req.body;
+    const { user_id } =req
+
+    try {
+        // If setting the bank account to active, deactivate all other accounts for this user
+        if (is_active === 'Active') {
+            // Deactivate all other bank accounts for the user
+            await Banks.updateMany(
+                { host_id: user_id, _id: { $ne: bank_id } },
+                { is_active: 'Not-Active' }
+            );
+            
+            // Activate the specified bank account
+            await Banks.findByIdAndUpdate(bank_id, { is_active: 'Active' });
+            return res.status(200).json({ message: 'Bank account set to active and others deactivated' });
+        } else {
+            // // If setting to not-active, check if there is any other active bank account
+            // const otherActiveBank = await Banks.findOne({
+            //     host_id: user_id,
+            //     is_active: 'Active',
+            //     _id: { $ne: bank_id }
+            // });
+            
+            // if (otherActiveBank) {
+            //     // Another active bank account exists, so set this one to not-active
+            //     await Banks.findByIdAndUpdate(bank_id, { is_active: 'Not-Active' });
+            //     res.status(200).json({ message: 'Bank account set to not-active' });
+            // } else {
+            //     // No other active account exists, so set this one to active by default
+            //     await Banks.findByIdAndUpdate(bank_id, { is_active: 'Active' });
+            //     res.status(200).json({ message: 'No other active bank accounts, so this one set to active' });
+            // }
+            return res.status(200).json({ message: "No other active bank accounts, so we can't set this to Not-Active" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     createBank,
     updateBank,
     getBanks,
     updateProfile,
-    dashboard
+    dashboard,
+    updateBankStatus
 };

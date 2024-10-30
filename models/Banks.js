@@ -62,6 +62,12 @@ const Banks = mongoose.model('banks', new Schema({
         enum:['Pending','Approve','Rejected'],
         required:true
     },
+    is_active:{
+        type:String,
+        enum:['Not-Active','Active'],
+        required:true,
+        default:'Not-Active'
+    }
 
 
           
