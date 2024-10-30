@@ -7,7 +7,7 @@ const addTrailer = async (req, res) => {
   const { body, user_id } = req;
   try {
       let data = body;
-
+      return res.status(200).json(data)
       // Function to generate random letters
       const generateRandomLetters = (length) => {
           const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
