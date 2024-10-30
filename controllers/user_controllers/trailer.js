@@ -42,9 +42,45 @@ const userTrailerbyCategory = async (req,res)=>{
 
 }
 
+const trailerSearch = async (req,res) => {
+    const { minPrice, maxPrice, minLength, maxLength, minWeight, maxWeight, hitchType, category } = req.body;
+
+    // Build query based on provided filters
+    const query = {};
+
+    if (minPrice && maxPrice) {
+        query.daily_rate = { $gte: minPrice, $lte: maxPrice };
+    }
+
+    if (minLength && maxLength) {
+        query.trailer_length = { $gte: minLength, $lte: maxLength };
+    }
+
+    if (minWeight && maxWeight) {
+        query.payload_capacity = { $gte: minWeight, $lte: maxWeight };
+    }
+
+    if (hitchType) {
+        query.hitch_type = hitchType;
+    }
+    if(category){
+        query.category = category
+    }
+
+    try {
+        // Fetch trailers matching the query
+        const trailers = await Trailers.find(query);
+        res.json(trailers);
+    } catch (error) {
+        console.error("Error fetching trailers:", error);
+        res.status(500).json({ error: "Failed to fetch trailers" });
+    }
+}
+
 module.exports = {
 
     userTrailerbyCategory,
-    getcordinates
+    getcordinates,
+    trailerSearch
 
 };
