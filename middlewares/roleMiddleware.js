@@ -15,7 +15,16 @@ const checkHost = (req, res, next) => {
     return res.status(403).json({ message: 'Access forbidden: Hosts only' });
 };
 
+const checkUser = (req, res, next) => {
+    const {user_data} = req
+    if (user_data.role === 'User') {
+        return next(); // Allow access if the user is a Host
+    }
+    return res.status(403).json({ message: 'Access forbidden: Users only' });
+};
+
 module.exports = {
     checkAdmin,
-    checkHost
+    checkHost,
+    checkUser
 };
