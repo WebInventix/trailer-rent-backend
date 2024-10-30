@@ -112,7 +112,7 @@ const Trailers = mongoose.model('trailers', new Schema({
         required:false
     },
     location: {
-        type:URL,
+        type:String,
         required:false
     },
     longitude:{
