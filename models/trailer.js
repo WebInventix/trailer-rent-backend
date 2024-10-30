@@ -103,16 +103,24 @@ const Trailers = mongoose.model('trailers', new Schema({
         type:String,
         required:false
     },
-    city: {
+    state: {
         type:String,
         required:false
     },
-    postal_codes: {
+    complete_address: {
         type:String,
         required:false
     },
     location: {
-        type:String,
+        type:URL,
+        required:false
+    },
+    longitude:{
+        type:Number,
+        required:false
+    },
+    latitude:{
+        type:Number,
         required:false
     },
     daily_rate: {
