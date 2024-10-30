@@ -27,7 +27,7 @@ const getcordinates  = async (req,res) => {
     }
 }
 const userTrailerbyCategory = async (req,res)=>{
-    const { minPrice, maxPrice, minLength, maxLength, minWeight, maxWeight, hitchType, category, location } = req.body;
+     const { minPrice, maxPrice, minLength, maxLength, minWeight, maxWeight, hitchType, category, location } = req.body;
 
 
     // Build query based on provided filters
@@ -59,7 +59,8 @@ const userTrailerbyCategory = async (req,res)=>{
     try {
         // Fetch trailers matching the query
         const trailers = await Trailers.find(query);
-        res.json(trailers);
+        const total = trailers.length
+        return res.status(200).json({data:{trailers,total}})
     } catch (error) {
         console.error("Error fetching trailers:", error);
         res.status(500).json({ error: "Failed to fetch trailers" });
