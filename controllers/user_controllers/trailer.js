@@ -5,7 +5,7 @@ const { Trailers } = require("../../models/trailer")
 
 
 const userTrailerbyCategory = async (req,res)=>{
-    const  {category} = req.params;
+    const  {category} = req.body;
 
     try {
         const trailers =  await Trailers.find({category:category}).populate('host_id')
