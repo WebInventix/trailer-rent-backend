@@ -156,12 +156,29 @@ const getTrailerById = async (req, res) => {
       return res.status(500).json({ message: `Failed to update trailer: ${error.message}` });
     }
   };
+
+  const trailerStatusUpdate = async (req, res) =>{
+    const {trailer_id,status}  = req.body
+    try {
+      const trailer = await Trailers.findOneAndUpdate({trailer_id},{$set:{status}})
+      if(!trailer){
+        return res.status(404).json({message: 'Trailer not found'})
+        }
+        return res.status(200).json({message: 'Trailer status updated successfully', trailer})
+      
+    } catch (error) {
+      return res.status(500).json({ message: `Failed to update trailer status: ${error}`})
+      
+    }
+
+  }
 module.exports = {
     addTrailer,
     getTrailerById,
     getTrailersByStatus,
     editTrailer,
-    getAllTrailers
+    getAllTrailers,
+    trailerStatusUpdate
 };
 
 

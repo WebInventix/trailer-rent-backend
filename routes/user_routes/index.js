@@ -1,11 +1,10 @@
 const express = require("express");
-const {  } = require('../../controllers/admin_controllers/index');
-
+const Bookings = require('../../controllers/user_controllers/bookings')
 
 const router = express.Router();
 
 
-// router.post('/verify-user',  verfiyUser);
+router.post('/book-a-trailer',  Bookings.bookingConfirm);
 // router.post('/reset-password',  resetPassword);
 
 

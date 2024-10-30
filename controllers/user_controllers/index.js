@@ -45,7 +45,7 @@ const getTraById = async (req,res)=>{
             {
                 return res.status(404).json({ message: "Trailer not found" });
             }
-                res.status(200).json({message: "Trailer Details", data: trailer})
+            return res.status(200).json({message: "Trailer Details", data: trailer})
         
     } catch (error) {
         return res.status(500).json({ message: error.message });
