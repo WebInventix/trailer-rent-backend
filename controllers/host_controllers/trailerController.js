@@ -3,11 +3,52 @@ const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Trailers } = require("../../models/trailer")
 const { v4: uuidv4 } = require('uuid');
 
+
+const getcordinates  = async (location) => {
+  const googleMapsShortUrl = location;
+
+  try {
+      // Step 1: Expand the shortened URL
+      const response = await fetch(googleMapsShortUrl, { method: 'HEAD', redirect: 'follow' });
+      const expandedUrl = response.url;
+
+      // Step 2: Extract latitude and longitude from the expanded URL
+      const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+      const match = expandedUrl.match(regex);
+
+      if (match) {
+          const latitude = parseFloat(match[1]);
+          const longitude = parseFloat(match[2]);
+          return  { latitude, longitude };
+
+      } else {
+         return  { error: "Unable to extract coordinates from URL" };
+
+      }
+  } catch (error) {
+      console.error('Error expanding URL:', error);
+      return  { error: "Failed to expand and retrieve coordinates" };
+  }
+}
+
+
 const addTrailer = async (req, res) => {
   const { body, user_id } = req;
   try {
       let data = body;
-      return res.status(200).json(data)
+      let cordinates = await getcordinates(data.location);
+      if(cordinates.error)
+      {
+        return res.status(400).json({ message: cordinates.error });
+      }
+      data.longitude = cordinates.longitude
+      data.latitude = cordinates.latitude
+
+      if(!data.category || !data.location || !data.latitude || !data.longitude)
+      {
+        return res.status(400).json({ message: "Please fill all fields" });
+      }
+
       // Function to generate random letters
       const generateRandomLetters = (length) => {
           const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
