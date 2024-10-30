@@ -22,12 +22,13 @@ const getcordinates  = async (location) => {
           return  { latitude, longitude };
 
       } else {
-         return  { error: "Unable to extract coordinates from URL" };
+         return  { error: "Please enter a valid Google Maps URL" };
 
       }
   } catch (error) {
       console.error('Error expanding URL:', error);
-      return  { error: "Failed to expand and retrieve coordinates" };
+      return  { error: "Please enter a valid Google Maps URL" };
+
   }
 }
 
