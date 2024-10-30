@@ -17,6 +17,10 @@ const Trailers = mongoose.model('trailers', new Schema({
         type: String,
         required:true,
     },
+    tariler_description:{
+        type:String,
+        required:true,
+    },
     year: {
         type: String,
         required:true,
