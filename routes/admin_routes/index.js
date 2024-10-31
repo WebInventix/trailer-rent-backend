@@ -11,6 +11,8 @@ router.get('/trailer-get',getTrailer)
 router.get('/trailer/:id', trailerByID)
 router.get('/trailer/host/:id', trailerByHostId)
 router.get('/get-all-bookings', adminBookings.getAllBookings)
+router.get('/booking-detail/:id',  adminBookings.getBookingDetail)
+
 
 
 
