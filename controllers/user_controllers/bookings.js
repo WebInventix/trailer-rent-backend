@@ -13,6 +13,7 @@ const bookingConfirm  = async (req,res) => {
         address,
         booking_type,
         booking_amount,
+        no_of_days,
         status
     } = req.body;
     const {user_id} = req
@@ -30,6 +31,7 @@ const bookingConfirm  = async (req,res) => {
             address,
             booking_type,
             booking_amount,
+            no_of_days,
             status
         });
 
