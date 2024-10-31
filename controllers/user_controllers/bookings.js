@@ -45,7 +45,19 @@ const bookingConfirm  = async (req,res) => {
 
 }
 
+const  getBookings = async (req, res) => {
+    const { user_id } = req;
+    try {
+        const bookings = await Bookings.find({ user_id }).populate('user_id').populate('host_id').populate('trailer_id');
+        return res.status(200).json({message:"All Bookings",data:{bookings}})
+    } catch (error) {
+        console.error('Error creating booking:', error);
+        res.status(500).json({ error: 'Failed to create booking' });
+    }
+
+}
 
 module.exports = {
-    bookingConfirm
+    bookingConfirm,
+    getBookings
 };
