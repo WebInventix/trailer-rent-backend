@@ -5,12 +5,12 @@ const Bookings = mongoose.model('bookings', new Schema({
     user_id: {
         type: String,
         required: true,
-        ref:'users'
+        ref:'user'
     },
     host_id: {
         type: String,
         required: true,
-        ref:'users'
+        ref:'user'
     },
     trailer_id: {
         type: String,
