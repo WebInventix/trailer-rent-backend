@@ -38,6 +38,10 @@ const Bookings = mongoose.model('bookings', new Schema({
         type: String,
         required: false,
     },
+    no_of_days:{
+        type: Number,
+        required: false
+    },
     booking_type:{
         type: String,
         required: true,
