@@ -18,6 +18,7 @@ router.post('/trailer/:id', editTrailer)
 router.post('/trailer-status-change', trailerStatusUpdate)
 router.post('/set-bank-status',  updateBankStatus)
 router.get('/get-my-bookings', myBookings.getMyBookings)
+router.get('/view-my-booking/:id', myBookings.viewBooking)
 
 
 
