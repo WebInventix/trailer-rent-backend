@@ -160,7 +160,11 @@ const getTrailerById = async (req, res) => {
   const trailerStatusUpdate = async (req, res) =>{
     const {trailer_id,status}  = req.body
     try {
-      const trailer = await Trailers.findOneAndUpdate({trailer_id},{$set:{status}})
+      // Check if trailer_id and status are provided
+    if (!trailer_id || !status) {
+      return res.status(400).json({ message: 'trailer_id and status are required' });
+  }
+      const trailer = await Trailers.findOneAndUpdate({trailer_id},{$set:{status}},{ new: true })
       if(!trailer){
         return res.status(404).json({message: 'Trailer not found'})
         }
