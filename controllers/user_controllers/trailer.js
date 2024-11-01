@@ -69,7 +69,7 @@ const userTrailerbyCategory = async (req,res)=>{
 }
 
 const trailerSearch = async (req,res) => {
-    const { minPrice, maxPrice, minLength, maxLength, minWeight, maxWeight, hitchType, category, location } = req.body;
+    const { minPrice, maxPrice, minLength, maxLength, minWeight, maxWeight, hitchType, category, location, state } = req.body;
 
 
     // Build query based on provided filters
@@ -96,6 +96,9 @@ const trailerSearch = async (req,res) => {
     if (location) {
         // Use a case-insensitive regex to search for the location in complete_address
         query.complete_address = { $regex: location, $options: 'i' };
+    }
+    if(state) {
+        query.state = state
     }
 
     try {
