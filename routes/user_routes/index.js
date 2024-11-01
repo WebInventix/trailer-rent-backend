@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post('/book-a-trailer',  Bookings.bookingConfirm);
 router.get('/bookings', Bookings.getBookings);
+router.post('/complete-order',)
 // router.post('/reset-password',  resetPassword);
 
 
