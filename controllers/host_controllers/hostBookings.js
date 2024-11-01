@@ -43,10 +43,12 @@ const accceptRejectBooking = async (req,res) => {
 
 }
 
+
+
 module.exports = {
     getMyBookings,
     viewBooking,
-    accceptRejectBooking
+    accceptRejectBooking,
 };
 
 

@@ -2,20 +2,36 @@ const mongoose = require('mongoose');
 const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Banks } = require("../../models/Banks")
 const { Trailers } = require("../../models/trailer")
-
+const {Bookings} = require('../../models/bookings')
 
 const dashboard = async (req,res) => {
-    const {user_id} = req
+    const { user_id } = req;
+
     try {
-        const trailers = await Trailers.find({host_id:user_id})
-        console.log(user_id,trailers)
-        let trailer_count = trailers.length
-        return res.status(200).json({message:'Dashboard',trailer_count:trailer_count})
-        
+        // Get the count of all bookings for the host
+        const booking_count = await Bookings.countDocuments({ host_id: user_id });
+
+        // Get today's date at midnight for comparison
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Find bookings for the host where the start_date is greater than today
+        const upcomingBookings = await Bookings.find({
+            host_id: user_id,
+            start_date: { $gt: today }
+        })
+        .populate('user_id')
+        .populate('host_id')
+        .populate('trailer_id');
+
+        const trailer_count = Trailers.countDocuments({host_id:user_id});
+
+        // Return both booking count and filtered bookings
+        return res.status(200).json({ booking_count, upcomingBookings, trailer_count });
+
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({message:error.message})
         
+        return res.status(500).json({ error: error.message });
     }
 }
 
