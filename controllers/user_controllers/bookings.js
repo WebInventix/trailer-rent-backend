@@ -72,13 +72,53 @@ const  getBookings = async (req, res) => {
         const bookings = await Bookings.find({ user_id }).populate('user_id').populate('host_id').populate('trailer_id');
         return res.status(200).json({message:"All Bookings",data:{bookings}})
     } catch (error) {
-        console.error('Error creating booking:', error);
-        res.status(500).json({ error: 'Failed to create booking' });
+        return res.status(500).json({ message: error.message });
     }
 
 }
 
+const getBookingById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const booking = await Bookings.findById(id).populate('user_id').populate('host_id').populate('trailer_id')
+        return res.status(200).json({message:"Booking by id",data:{booking}})
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+        
+    }
+}
+
+
+const completeBooking = async (req, res) => {
+    const { booking_id } = req.body; // Make sure booking_id is extracted correctly
+
+    if (!booking_id) {
+        return res.status(400).json({ error: 'Missing booking_id' });
+    }
+
+    try {
+        // Find the booking by ID and update the status to 'Completed'
+        const booking = await Bookings.findByIdAndUpdate(
+            booking_id,
+            { status: 'Completed' },
+            { new: true }
+        );
+
+        // If no booking is found, return a 404 Not Found error
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+
+        // Respond with a success message and the updated booking data
+        return res.status(200).json({ message: "Booking Completed", data: { booking } });
+
+    } catch (error) {
+        console.error('Error completing booking:', error);
+        return res.status(500).json({ error: 'Failed to complete booking' });
+    }
+};
 module.exports = {
     bookingConfirm,
-    getBookings
+    getBookings,
+    completeBooking
 };
