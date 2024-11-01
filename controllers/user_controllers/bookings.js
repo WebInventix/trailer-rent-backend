@@ -14,7 +14,9 @@ const bookingConfirm  = async (req,res) => {
         booking_type,
         booking_amount,
         no_of_days,
-        status
+        status,
+        per_day_price,
+        total_price
     } = req.body;
     const {user_id} = req
 
@@ -47,6 +49,8 @@ const bookingConfirm  = async (req,res) => {
             booking_type,
             booking_amount,
             no_of_days,
+            per_day_price,
+            total_price,
             status
         });
 

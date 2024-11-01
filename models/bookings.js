@@ -1,3 +1,4 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
@@ -41,6 +42,14 @@ const Bookings = mongoose.model('bookings', new Schema({
     no_of_days:{
         type: Number,
         required: false
+    },
+    per_day_price:{
+        type: Number,
+        required: false
+    },
+    total_price:{
+        type: Number,
+        required:false
     },
     booking_type:{
         type: String,
