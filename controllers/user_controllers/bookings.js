@@ -120,5 +120,6 @@ const completeBooking = async (req, res) => {
 module.exports = {
     bookingConfirm,
     getBookings,
-    completeBooking
+    completeBooking,
+    getBookingById
 };
