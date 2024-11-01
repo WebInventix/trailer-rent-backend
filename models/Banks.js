@@ -5,7 +5,7 @@ const Banks = mongoose.model('banks', new Schema({
     host_id: {
         type: String,
         required: true,
-        ref:'users'
+        ref:'user'
     },
     account_name: {
         type: String,
