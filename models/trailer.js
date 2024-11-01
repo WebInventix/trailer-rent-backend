@@ -17,7 +17,7 @@ const Trailers = mongoose.model('trailers', new Schema({
         type: String,
         required:true,
     },
-    tariler_description:{
+    trailer_description:{
         type:String,
         required:true,
     },
