@@ -3,6 +3,7 @@ const { register_user, login_user, verify_reset_password_OTP, reset_user_passwor
 const { upload_image_contoller } = require('../../controllers/upload_files_controllers/upload_images_cont.js');
 const { userTrailer, getTraById, trailerByHost } = require('../../controllers/user_controllers/index.js')
 const TrailerUser = require('../../controllers/user_controllers/trailer.js')
+const AdminIndex = require('../../controllers/admin_controllers/index.js')
 const router = express.Router()
 
 
@@ -17,7 +18,7 @@ router.post('/search-trailer',   TrailerUser.trailerSearch)
 router.get('/single-trailer/:id', getTraById)
 router.get('/trailer-by-host-id/:host_id', trailerByHost)
 router.get('/get-cordinates', TrailerUser.getcordinates)
-
+router.get('/get-states',AdminIndex.getStates)
 
 
 
