@@ -31,7 +31,7 @@ const bookingConfirm  = async (req,res) => {
 
         if (existingBooking) {
             return res.status(400).json({
-                error: `Trailer is already booked from ${existingBooking.start_date} to ${existingBooking.end_date}.`
+                message: `Trailer is already booked from ${existingBooking.start_date} to ${existingBooking.end_date}.`
             });
         }
 
