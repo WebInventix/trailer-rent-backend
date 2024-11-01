@@ -442,6 +442,12 @@ const kycVerification = async (req, res, next) => {
     registration_card
   } = req.body; // Extract fields from the body
 
+  if(!avatar || !driving_license)
+  {
+    return res.status(400).json({message:'Avatar and Driving License are required for KYC verification',success:false})
+
+  }
+
   try {
     // Find the user by ID
     var user = await User_Auth_Schema.findById(user_id);
