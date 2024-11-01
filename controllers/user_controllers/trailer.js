@@ -27,7 +27,7 @@ const getcordinates  = async (req,res) => {
     }
 }
 const userTrailerbyCategory = async (req,res)=>{
-     const { minPrice, maxPrice, minLength, maxLength, minWeight, maxWeight, hitchType, category, location } = req.body;
+    const { minPrice, maxPrice, minLength, maxLength, minWeight, maxWeight, hitchType, category, location, state } = req.body;
 
 
     // Build query based on provided filters
@@ -55,12 +55,14 @@ const userTrailerbyCategory = async (req,res)=>{
         // Use a case-insensitive regex to search for the location in complete_address
         query.complete_address = { $regex: location, $options: 'i' };
     }
+    if(state) {
+        query.state = state
+    }
 
     try {
         // Fetch trailers matching the query
         const trailers = await Trailers.find(query);
-        const total = trailers.length
-        return res.status(200).json({data:{trailers,total}})
+        res.json(trailers);
     } catch (error) {
         console.error("Error fetching trailers:", error);
         res.status(500).json({ error: "Failed to fetch trailers" });
