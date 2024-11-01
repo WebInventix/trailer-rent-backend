@@ -229,7 +229,8 @@ const updateBankStatus = async (req, res) => {
             
             // Activate the specified bank account
             await Banks.findByIdAndUpdate(bank_id, { is_active: 'Active' });
-            return res.status(200).json({ message: 'Bank account set to active and others deactivated' });
+            let all_banks = Banks.find({host_id:user_id}).populate('host_id')
+            return res.status(200).json({ message: 'Bank account set to active and others deactivated',banks:all_banks });
         } else {
             // // If setting to not-active, check if there is any other active bank account
             // const otherActiveBank = await Banks.findOne({

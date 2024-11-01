@@ -30,10 +30,23 @@ const viewBooking = async (req,res)=>{
     
 }
 
+const accceptRejectBooking = async (req,res) => {
+    const {booking_id, status}  = req.body
+    try {
+        const booking = await Bookings.findByIdAndUpdate(booking_id, {status}, {new:true})
+        return res.status(200).json({message:"Booking Status Updated", data:{booking}})
+        
+    } catch (error) {
+        return res.status(500).json({message:error.message})
+        
+    }
+
+}
 
 module.exports = {
     getMyBookings,
-    viewBooking
+    viewBooking,
+    accceptRejectBooking
 };
 
 
