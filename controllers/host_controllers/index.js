@@ -24,7 +24,7 @@ const dashboard = async (req,res) => {
         .populate('host_id')
         .populate('trailer_id');
 
-        const trailer_count = Trailers.countDocuments({host_id:user_id});
+        const trailer_count = await Trailers.countDocuments({host_id:user_id});
 
         // Return both booking count and filtered bookings
         return res.status(200).json({ booking_count, upcomingBookings, trailer_count });
