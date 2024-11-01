@@ -19,6 +19,21 @@ const bookingConfirm  = async (req,res) => {
     const {user_id} = req
 
     try {
+
+        const existingBooking = await Bookings.findOne({
+            trailer_id,
+            $or: [
+                { start_date: { $lte: end_date }, end_date: { $gte: start_date } }
+            ]
+        });
+
+        if (existingBooking) {
+            return res.status(400).json({
+                error: `Trailer is already booked from ${existingBooking.start_date} to ${existingBooking.end_date}.`
+            });
+        }
+
+
         // Create a new booking with the provided data
         const newBooking = new Bookings({
             user_id,
@@ -38,7 +53,7 @@ const bookingConfirm  = async (req,res) => {
         // Save the booking to the database
         await newBooking.save();
         
-        res.status(201).json({ message: 'Booking created successfully', booking: newBooking });
+        res.status(200).json({ message: 'Booking created successfully', booking: newBooking });
     } catch (error) {
         console.error('Error creating booking:', error);
         res.status(500).json({ error: 'Failed to create booking' });
