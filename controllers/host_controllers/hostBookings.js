@@ -43,12 +43,24 @@ const accceptRejectBooking = async (req,res) => {
 
 }
 
-
+const getChatUsers = async (req, res) => {
+    const { user_id} = req;
+    try {
+        // Fetch distinct user_id values where host_id matches the provided user_id
+        const users = await Bookings.distinct("user_id", { host_id:user_id });
+        
+        res.status(200).json({ message:'Users Fetched Succesfully!g', users });
+    } catch (error) {
+        console.error("Error fetching chat users:", error);
+        res.status(500).json({ message: "An error occurred while fetching chat users." });
+    }
+};
 
 module.exports = {
     getMyBookings,
     viewBooking,
     accceptRejectBooking,
+    getChatUsers
 };
 
 
