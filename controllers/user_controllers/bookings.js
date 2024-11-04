@@ -117,9 +117,25 @@ const completeBooking = async (req, res) => {
         return res.status(500).json({ error: 'Failed to complete booking' });
     }
 };
+
+
+const getChatUsers = async (req, res) => {
+    const { user_id} = req;
+    try {
+        // Fetch distinct user_id values where host_id matches the provided user_id
+        const userIds = await Bookings.distinct("host_id", { user_id });
+        const users = await User_Auth_Schema.find({ _id: { $in: userIds } });
+        
+        res.status(200).json({ message:'Users Fetched Succesfully!g', users });
+    } catch (error) {
+        console.error("Error fetching chat users:", error);
+        res.status(500).json({ message: "An error occurred while fetching chat users." });
+    }
+};
 module.exports = {
     bookingConfirm,
     getBookings,
     completeBooking,
-    getBookingById
+    getBookingById,
+    getChatUsers
 };
