@@ -39,7 +39,7 @@ const Tickets = mongoose.model('tickets', new Schema({
     comments: [commentSchema], 
     status:{
         type: String,
-        enum:['Pending','Approve','Rejected'],
+        enum:['In-Process','Resolved'],
         required:true
     }
 
