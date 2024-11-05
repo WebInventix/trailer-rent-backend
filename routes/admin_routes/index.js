@@ -1,6 +1,7 @@
 const express = require("express");
 const { userListing, userDetailsById, approveUser, getTrailer, trailerByID, trailerByHostId } = require('../../controllers/admin_controllers/index');
 const adminBookings = require('../../controllers/admin_controllers/bookings')
+const tickets = require('../../controllers/host_controllers/tickets')
 
 const router = express.Router();
 router.get('/user-listing', userListing);
@@ -12,7 +13,9 @@ router.get('/trailer/:id', trailerByID)
 router.get('/trailer/host/:id', trailerByHostId)
 router.get('/get-all-bookings', adminBookings.getAllBookings)
 router.get('/booking-detail/:id',  adminBookings.getBookingDetail)
-
+router.get('/get-tickets', tickets.getTickets)
+router.get('/view-ticket/:ticket_id', tickets.viewTicket)
+router.post('/add-comment', tickets.addComment)
 
 
 

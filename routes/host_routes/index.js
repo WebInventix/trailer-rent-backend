@@ -24,6 +24,8 @@ router.post('/booking-reject-confirm',  myBookings.accceptRejectBooking)
 router.get('/my-chat-users',myBookings.getChatUsers)
 router.post('/add-ticket', tickets.addTicket)
 router.get('/get-tickets', tickets.getTickets)
+router.get('/view-ticket/:ticket_id', tickets.viewTicket)
+router.post('/add-comment', tickets.addComment)
 
 
 

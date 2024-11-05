@@ -17,7 +17,7 @@ const addTicket = async (req,res) => {
 const getTickets = async(req,res) => {
     const {user_id} = req
     try {
-        const tickets = await Tickets.find({user_id:user_id})
+        const tickets = await Tickets.find({user_id:user_id}).populate('user_id').populate('comments.commented_by')
         res.status(200).json({message:"fetched all tickets",tickets:tickets})
         
     } catch (error) {
@@ -25,9 +25,52 @@ const getTickets = async(req,res) => {
     }
 }
 
+const viewTicket = async(req,res) => {
+    const {ticket_id} = req.params
+    try {
+        const ticket = await Tickets.findById(ticket_id).populate('user_id', 'first_name last_name email').populate('comments.commented_by', 'first_name email first_name');
+        res.status(200).json({message:"fetched ticket",ticket:ticket})
+        
+    } catch (error) {
+        res.status(500).json({message:error.message})
+        
+    }
+}
+
+const addComment = async (req,res) => {
+    const {user_id} = req
+    const { ticket_id, comment } = req.body;
+    try {
+        // Find the ticket by ID
+        const ticket = await Tickets.findById(ticket_id);
+
+        if (!ticket) {
+            return res.status(404).json({ success: false, message: 'Ticket not found' });
+        }
+
+        // Create a new comment
+        const newComment = {
+            comment,
+            commented_by: user_id,
+            created_at: new Date()
+        };
+
+        // Add the comment to the ticket
+        ticket.comments.push(newComment);
+
+        // Save the updated post
+        await ticket.save();
+        let  completePost = await Tickets.findById(ticket_id).populate('user_id', 'first_name last_name email').populate('comments.commented_by', 'first_name email first_name');
+        res.status(200).json({ success: true, message: 'Comment added successfully', completePost });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error adding comment', error });
+    }
+}
 module.exports = {
     addTicket,
-    getTickets
+    getTickets,
+    viewTicket,
+    addComment
 };
 
 
