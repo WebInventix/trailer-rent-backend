@@ -87,7 +87,7 @@ const updateStatus = async (req,res) => {
             }
             ticket.status = status
             await ticket.save()
-            return res.status(200).json({ success: true, message: 'Ticket status updated successfully'})
+            return res.status(200).json({ success: true, message: 'Ticket status updated successfully',ticket:ticket})
         
     } catch (error) {
         res.status(500).json({message:error.message})
