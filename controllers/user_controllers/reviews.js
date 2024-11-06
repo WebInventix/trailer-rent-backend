@@ -7,8 +7,8 @@ const addReview = async (req,res) => {
     const {user_id} = req
     const {booking_id, remarks , rating} = req.body;
     try {
-        let booking = Bookings.findById(booking_id)
-
+        let booking = await Bookings.findOne({_id:booking_id})
+        console.log(booking)
         const review = new  Reviews({
             user_id:user_id,
             booking_id:booking_id,
