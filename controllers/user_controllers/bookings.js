@@ -85,7 +85,7 @@ const getBookingById = async (req, res) => {
     try {
         const booking = await Bookings.findById(id).populate('user_id').populate('host_id').populate('trailer_id')
         // console.log(booking)
-        const reviews = await Reviews.find({trailer_id:booking.trailer_id._id})
+        const reviews = await Reviews.find({trailer_id:booking.trailer_id._id}).populate('user_id').populate('host_id')
         let user_review= false
         reviews.forEach(review => {
             if(review.user_id.toString() === user_id){
