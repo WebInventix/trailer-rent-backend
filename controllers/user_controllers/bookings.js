@@ -1,6 +1,8 @@
 const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Trailers } = require("../../models/trailer")
 const {Bookings} = require('../../models/bookings')
+const {Reviews} =  require('../../models/reviews')
+
 
 const bookingConfirm  = async (req,res) => {
     const {
@@ -78,10 +80,20 @@ const  getBookings = async (req, res) => {
 }
 
 const getBookingById = async (req, res) => {
+    const {user_id} = req
     const { id } = req.params;
     try {
         const booking = await Bookings.findById(id).populate('user_id').populate('host_id').populate('trailer_id')
-        return res.status(200).json({message:"Booking by id",data:{booking}})
+        // console.log(booking)
+        const reviews = await Reviews.find({trailer_id:booking.trailer_id._id})
+        let user_review= false
+        reviews.forEach(review => {
+            if(review.user_id.toString() === user_id){
+            user_review = true;
+            }
+        })
+        return res.status(200).json({message:"Booking Details",data:{booking,user_review,reviews}})
+        // return res.status(200).json({message:"Booking by id",data:{booking}})
     } catch (error) {
         return res.status(500).json({ message: error.message });
         
