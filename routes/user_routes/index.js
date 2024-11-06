@@ -1,5 +1,6 @@
 const express = require("express");
 const Bookings = require('../../controllers/user_controllers/bookings')
+const Reviews = require("../../controllers/user_controllers/reviews")
 
 const router = express.Router();
 
@@ -9,6 +10,7 @@ router.get('/bookings', Bookings.getBookings);
 router.post('/complete-booking',Bookings.completeBooking)
 router.get('/view-booking/:id',Bookings.getBookingById)
 router.get('/my-chat-users',Bookings.getChatUsers)
+router.post('/add-review',Reviews.addReview)
 // router.post('/reset-password',  resetPassword);
 
 
