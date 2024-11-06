@@ -18,13 +18,14 @@ const addTicket = async (req,res) => {
 const getTickets = async(req,res) => {
     const {user_id,user_data} = req
     try {
+        var tickets;
         if(user_data.role=="Admin")
         {
-            const tickets = await Tickets.find().populate('user_id').populate('comments.commented_by')
+            tickets = await Tickets.find().populate('user_id').populate('comments.commented_by')
         }
         else
         {
-            const tickets = await Tickets.find({user_id:user_id}).populate('user_id').populate('comments.commented_by')
+            tickets = await Tickets.find({user_id:user_id}).populate('user_id').populate('comments.commented_by')
         }
         
         res.status(200).json({message:"fetched all tickets",tickets:tickets})
