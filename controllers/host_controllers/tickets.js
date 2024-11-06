@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { User_Auth_Schema } = require("../../models/user_auth_model");
 const {Tickets} = require("../../models/tickets")
+const { generateOtp } = require("../../utils/generate_OTP");
 
 const addTicket = async (req,res) => {
     const {user_id} = req
@@ -15,9 +16,17 @@ const addTicket = async (req,res) => {
 }
 
 const getTickets = async(req,res) => {
-    const {user_id} = req
+    const {user_id,user_data} = req
     try {
-        const tickets = await Tickets.find({user_id:user_id}).populate('user_id').populate('comments.commented_by')
+        if(user_data.role=="Admin")
+        {
+            const tickets = await Tickets.find().populate('user_id').populate('comments.commented_by')
+        }
+        else
+        {
+            const tickets = await Tickets.find({user_id:user_id}).populate('user_id').populate('comments.commented_by')
+        }
+        
         res.status(200).json({message:"fetched all tickets",tickets:tickets})
         
     } catch (error) {
@@ -66,11 +75,29 @@ const addComment = async (req,res) => {
         res.status(500).json({ success: false, message: 'Error adding comment', error });
     }
 }
+
+const updateStatus = async (req,res) => {
+    const {ticket_id} = req.params
+    const {status} = req.body
+    try {
+        const ticket = await Tickets.findById(ticket_id)
+        if (!ticket) {
+            return res.status(404).json({ success: false, message: 'Ticket not found'})
+            }
+            ticket.status = status
+            await ticket.save()
+            return res.status(200).json({ success: true, message: 'Ticket status updated successfully'})
+        
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+}
 module.exports = {
     addTicket,
     getTickets,
     viewTicket,
-    addComment
+    addComment,
+    updateStatus
 };
 
 
