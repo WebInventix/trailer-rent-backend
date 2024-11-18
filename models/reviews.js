@@ -3,22 +3,22 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const Reviews = mongoose.model('reviews', new Schema({
     user_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref:'user'
     },
     booking_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref:'bookings'
     },
     host_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref:'user'
     },
     trailer_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref:'trailers'
     },
