@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Trailers } = require("../../models/trailer")
+const { Reviews } = require("../../models/reviews")
 const { v4: uuidv4 } = require('uuid');
 
 
@@ -84,14 +85,29 @@ const getTrailerById = async (req, res) => {
     const { id } = req.params;  // Assuming `id` is passed as a URL parameter
     try {
       const trailer = await Trailers.findOne({ trailer_id: id }).populate('host_id');
-      
       // Check if the trailer exists
       if (!trailer) {
         return res.status(404).json({ message: 'Trailer not found' });
       }
+
+      const reviewsData = await Reviews.aggregate([
+        { $match: { trailer_id: id } }, // Filter reviews by trailer ID
+        {
+          $group: {
+            _id: null,
+            averageRating: { $avg: '$rating' }, // Calculate average rating
+            totalReviews: { $sum: 1 } // Count total reviews
+          }
+        }
+      ]);
+
+      const reviewsSummary = reviewsData.length > 0 ? reviewsData[0] : { averageRating: null, totalReviews: 0 };
+
+    // Fetch individual reviews (optional, for additional details)
+    const reviews = await Reviews.find({ trailer_id: id }).populate('user_id');
   
       // Return the trailer data
-      return res.status(200).json({ message: 'Trailer found', trailer });
+      return res.status(200).json({ message: 'Trailer found', trailer, reviewsSummary, reviews });
     } catch (error) {
       // Handle any errors
       return res.status(500).json({ message: `Failed to retrieve trailer: ${error.message}` });
