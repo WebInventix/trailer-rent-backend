@@ -104,7 +104,7 @@ const getTrailerById = async (req, res) => {
       const reviewsSummary = reviewsData.length > 0 ? reviewsData[0] : { averageRating: null, totalReviews: 0 };
 
     // Fetch individual reviews (optional, for additional details)
-    const reviews = await Reviews.find({ trailer_id: id }).populate('user_id');
+    const reviews = await Reviews.find({ trailer_id: trailer._id }).populate('user_id');
   
       // Return the trailer data
       return res.status(200).json({ message: 'Trailer found', trailer, reviewsSummary, reviews });
