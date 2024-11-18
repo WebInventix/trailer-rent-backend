@@ -91,7 +91,7 @@ const getTrailerById = async (req, res) => {
       }
 
       const reviewsData = await Reviews.aggregate([
-        { $match: { trailer_id: id } }, // Filter reviews by trailer ID
+        { $match: { trailer_id: trailer._id } }, // Filter reviews by trailer ID
         {
           $group: {
             _id: null,
