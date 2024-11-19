@@ -27,6 +27,10 @@ const Tickets = mongoose.model('tickets', new Schema({
         required: true,
         ref:'user'
     },
+    ticket_id:{
+        type: String,
+        required: false,
+    },
     query: {
         type: String,
         required: true,

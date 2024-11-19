@@ -7,7 +7,20 @@ const addTicket = async (req,res) => {
     const {user_id} = req
     const {query,attachment} = req.body
     try {
-        const ticket = new Tickets({user_id,query,attachment,status:'In-Process'})
+        const generateRandomLetters = (length) => {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += letters.charAt(Math.floor(Math.random() * letters.length));
+            }
+            return result;
+        };
+        // const ticketId = generateRandomLetters(10);
+        const randomLetters = generateRandomLetters(2); // Generates two random uppercase letters
+      const randomNumber = Math.floor(Math.random() * 900) + 100; // Generates a random number between 100 and 999
+        const ticketId = `Tra-${randomLetters}${randomNumber}`;
+     
+        const ticket = new Tickets({user_id,ticket_id:ticketId,query,attachment,status:'In-Process'})
         await ticket.save()
         res.status(201).json({message:"Ticket Added Successfully",ticket:ticket})
     } catch (error) {
