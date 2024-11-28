@@ -2,7 +2,7 @@ const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Trailers } = require("../../models/trailer")
 const {Bookings} = require('../../models/bookings')
 const {Reviews} =  require('../../models/reviews')
-
+const axios = require('axios');
 
 const bookingConfirm  = async (req,res) => {
     const {
@@ -18,11 +18,40 @@ const bookingConfirm  = async (req,res) => {
         no_of_days,
         status,
         per_day_price,
-        total_price
+        total_price,
+        card_name,
+        card_number,
+        cvd,
+        exp_year,
+        exp_month
     } = req.body;
     const {user_id} = req
 
     try {
+        let base64Auth = "MzgzNjEyODQ0OjhmQTdlMzg5MkJDZDQ1NkU4NTUyMWYwRjc4QzM0NTY4";
+        const paymentData = {
+            amount: parseFloat(total_price), // Amount to charge
+            payment_method: 'card',
+            currency: 'CAD', // Currency in ISO 4217 format
+            card: {
+              name: card_name,
+              number: card_number, // Test card number
+              expiry_month: exp_month,
+              expiry_year: exp_year,
+              cvd: cvd
+            }
+          };
+
+          
+          
+        //   console.log(bamboora.data)
+        //   // Return the Bambora API response
+        //  return res.json({
+        //     success: true,
+        //     data: bamboora.data
+        //   });
+
+
 
         const existingBooking = await Bookings.findOne({
             trailer_id,
@@ -37,7 +66,12 @@ const bookingConfirm  = async (req,res) => {
             });
         }
 
-
+        const bamboora = await axios.post('https://api.na.bambora.com/v1/payments', paymentData, {
+            headers: {
+              'Authorization': `Passcode ${base64Auth}`,
+              'Content-Type': 'application/json'
+            }
+          });
         // Create a new booking with the provided data
         const newBooking = new Bookings({
             user_id,
@@ -53,7 +87,8 @@ const bookingConfirm  = async (req,res) => {
             no_of_days,
             per_day_price,
             total_price,
-            status
+            status,
+            bambora_response:bamboora.data
         });
 
         // Save the booking to the database
@@ -61,8 +96,36 @@ const bookingConfirm  = async (req,res) => {
         
         res.status(200).json({ message: 'Booking created successfully', booking: newBooking });
     } catch (error) {
-        console.error('Error creating booking:', error);
-        res.status(500).json({ error: 'Failed to create booking' });
+        if (error.response) {
+            // Bambora returned a response with a status code that falls out of the range of 2xx
+            const statusCode = error.response.status;
+            const errorMessage = error.response.data?.message || "An error occurred";
+            const errorDetails = error.response.data || {};
+    
+            console.error("Bambora API Error:", errorDetails); // Log detailed error for debugging
+    
+            return res.status(statusCode).json({
+                success: false,
+                message: errorMessage,
+                details: errorDetails,
+            });
+        } else if (error.request) {
+            // No response was received from Bambora
+            console.error("No response from Bambora:", error.request);
+    
+            return res.status(500).json({
+                success: false,
+                message: "No response from payment gateway.",
+            });
+        } else {
+            // Something else happened while setting up the request
+            console.error("Error in setting up request:", error.message);
+    
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
     }
 
 
