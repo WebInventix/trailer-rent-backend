@@ -60,6 +60,10 @@ const Bookings = mongoose.model('bookings', new Schema({
         type: Number,
         required: true
     },
+    bambora_response:{
+        type: mongoose.Schema.Types.Mixed,
+        required: false
+    },
     status:{
         type: String,
         enum:['In-Process','Confirmed','Completed','Rejected'],
