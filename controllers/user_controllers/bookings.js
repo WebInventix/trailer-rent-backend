@@ -76,6 +76,8 @@ const bookingConfirm  = async (req,res) => {
               'Content-Type': 'application/json'
             }
           });
+
+          let host_price = total_price * 0.20;
         // Create a new booking with the provided data
         const newBooking = new Bookings({
             user_id,
@@ -91,6 +93,7 @@ const bookingConfirm  = async (req,res) => {
             no_of_days,
             per_day_price,
             total_price,
+            host_price,
             status,
             bambora_response:bamboora.data
         });
