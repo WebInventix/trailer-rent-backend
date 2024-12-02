@@ -11,7 +11,18 @@ const generateUniquePid = () => {
     return `PID${uniqueId}`;
 };
 
-
+const approveTrailer = async (req, res) => {
+    const { id } = req.params;
+    const {status} = req.body
+    const trailer = await Trailers.findOne({trailer_id:id});
+    if (!trailer) 
+        {
+            return res.status(404).json({ message: "Trailer not found" });
+        }
+    trailer.approve_status = status
+    await trailer.save()
+    return res.json({ message: `Trailer ${status}` });
+}
 const getTrailer = async (req,res ) => {
     try {
         let trailers = await Trailers.find().populate('host_id')
@@ -131,5 +142,6 @@ module.exports = {
     getTrailer,
     trailerByID,
     trailerByHostId,
-    getStates
+    getStates,
+    approveTrailer
 };
