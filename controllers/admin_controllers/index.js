@@ -14,7 +14,7 @@ const generateUniquePid = () => {
 const approveTrailer = async (req, res) => {
     const { id } = req.params;
     const {status} = req.body
-    const trailer = await Trailers.findOne({trailer_id:id});
+    const trailer = await Trailers.findById(id);
     if (!trailer) 
         {
             return res.status(404).json({ message: "Trailer not found" });
