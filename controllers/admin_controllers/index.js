@@ -54,11 +54,11 @@ const userListing = async (req,res) => {
         let user;
         if(!role)
         {
-            user = await User_Auth_Schema.find().select("-password");
+            user = await User_Auth_Schema.find().select("-password").sort({ createdAt: -1 });
         }
         else
         {
-            user = await User_Auth_Schema.find({role:role}).select("-password")
+            user = await User_Auth_Schema.find({role:role}).select("-password").sort({ createdAt: -1 });
         }
         
         res.json(user);

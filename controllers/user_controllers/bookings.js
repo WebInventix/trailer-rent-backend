@@ -56,8 +56,12 @@ const bookingConfirm  = async (req,res) => {
         const existingBooking = await Bookings.findOne({
             trailer_id,
             $or: [
-                { start_date: { $lte: end_date }, end_date: { $gte: start_date } }
-            ]
+                { 
+                    start_date: { $lte: end_date }, 
+                    end_date: { $gte: start_date } 
+                }
+            ],
+            status:'Confirmed'
         });
 
         if (existingBooking) {
