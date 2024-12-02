@@ -79,7 +79,7 @@ const userDetailsById = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        const banks = await Banks.find({ host_id: id });
+        const banks = await Banks.find({ host_id: id , is_active:'Active'});
         user.banks= banks;
         res.json(user);
     } catch (error) {
