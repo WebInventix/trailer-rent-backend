@@ -72,7 +72,7 @@ const userListing = async (req,res) => {
 const userDetailsById = async (req, res) => {
     try {
         const { id } = req.params;  // Get the user ID from the request parameters
-        const user = await User_Auth_Schema.findById(id).select("-password"); 
+        let user = await User_Auth_Schema.findById(id).select("-password"); 
          // Fetch the user by ID, excluding the password field
 
         if (!user) {
