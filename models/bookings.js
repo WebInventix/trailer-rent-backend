@@ -51,6 +51,10 @@ const Bookings = mongoose.model('bookings', new Schema({
         type: Number,
         required:false
     },
+    host_price:{
+        type: Number,
+        required:false
+    },
     booking_type:{
         type: String,
         required: true,

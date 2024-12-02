@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Trailers  } = require("../../models/trailer");
-
+const {Banks} = require("../../models/Banks");
 
 
 
@@ -72,12 +72,15 @@ const userListing = async (req,res) => {
 const userDetailsById = async (req, res) => {
     try {
         const { id } = req.params;  // Get the user ID from the request parameters
-        const user = await User_Auth_Schema.findById(id).select("-password");  // Fetch the user by ID, excluding the password field
+        const user = await User_Auth_Schema.findById(id).select("-password"); 
+         // Fetch the user by ID, excluding the password field
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
+        const banks = await Banks.find({ host_id: id });
+        user.banks= banks;
         res.json(user);
     } catch (error) {
         return res.status(500).json({ message: error.message });
