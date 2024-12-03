@@ -18,7 +18,6 @@ const bookingConfirm  = async (req,res) => {
         no_of_days,
         status,
         per_day_price,
-        total_price,
         card_name,
         card_number,
         cvd,
@@ -30,26 +29,25 @@ const bookingConfirm  = async (req,res) => {
     try {
         let base64Auth = "MzgzNjEyODQ0OjhmQTdlMzg5MkJDZDQ1NkU4NTUyMWYwRjc4QzM0NTY4";
         const paymentData = {
-            amount: parseFloat(total_price), // Amount to charge
+            amount: parseFloat(booking_amount), // Amount to charge
             payment_method: 'card',
             currency: 'CAD', // Currency in ISO 4217 format
             card: {
-              name: card_name,
-              number: card_number, // Test card number
-              expiry_month: exp_month,
-              expiry_year: exp_year,
-              cvd: cvd,
-                
+                name: card_name,
+                number: card_number,
+                expiry_month: exp_month,
+                expiry_year: exp_year,
+                cvd: cvd
             },
-            billing:{
-                address_line1: "123 Test Street", // Dummy address
+            billing: {
+                address_line1: "123 Test Street", // Replace with actual billing address
                 address_line2: "Suite 456", // Optional
-                city: "Test City", // Dummy city
-                province: "ON", // Dummy province/state
-                postal_code: "A1A 1A1", // Dummy postal code
-                country: "CA" // Dummy country code (ISO 3166-1 alpha-2)
+                city: "Test City",
+                province: "ON",
+                postal_code: "A1A 1A1",
+                country: "CA"
             }
-          };
+        };
 
           
           
@@ -86,7 +84,7 @@ const bookingConfirm  = async (req,res) => {
             }
           });
 
-          let host_price = total_price * 0.80;
+          let host_price = booking_amount * 0.80;
         // Create a new booking with the provided data
         const newBooking = new Bookings({
             user_id,
@@ -101,7 +99,6 @@ const bookingConfirm  = async (req,res) => {
             booking_amount,
             no_of_days,
             per_day_price,
-            total_price,
             host_price,
             status,
             bambora_response:bamboora.data
