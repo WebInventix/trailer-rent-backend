@@ -40,7 +40,7 @@ const trailerByID = async (req,res) => {
 
         if(!trailer) { return res.status(404).json({message:"Trailer not found"}) }
 
-        let reviews = await Reviews.find({trailer_id:id})
+        let reviews = await Reviews.find({trailer_id:id}).populate('user_id')
         trailer.reviews = reviews
         return res.status(200).json({message:"Trailer found",trailer:trailer})
 
