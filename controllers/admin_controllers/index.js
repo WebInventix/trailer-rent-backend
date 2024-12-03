@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Trailers  } = require("../../models/trailer");
 const {Banks} = require("../../models/Banks");
+const {Reviews} = require("../../models/reviews");
 
 
 
@@ -35,8 +36,12 @@ const getTrailer = async (req,res ) => {
 const trailerByID = async (req,res) => {
     const {id} = req.params
     try {
-        let trailer = await Trailers.findById(id).populate('host_id')
+        let trailer = await Trailers.findById(id).lean().populate('host_id')
+
         if(!trailer) { return res.status(404).json({message:"Trailer not found"}) }
+
+        let reviews = await Reviews.find({trailer_id:id})
+        trailer.reviews = reviews
         return res.status(200).json({message:"Trailer found",trailer:trailer})
 
     }
