@@ -27,26 +27,27 @@ const bookingConfirm  = async (req,res) => {
     const {user_id} = req
 
     try {
-        let base64Auth = "MzgzNjEyODQ0OjhmQTdlMzg5MkJDZDQ1NkU4NTUyMWYwRjc4QzM0NTY4";
+      //  let base64Auth = "MzgzNjEyODQ0OjhmQTdlMzg5MkJDZDQ1NkU4NTUyMWYwRjc4QzM0NTY4";  // Test Keys
+        let base64Auth = "Mzg3MTk0MjM4OjAyOEE2NUNkMEEwOTQ5YTA4OGE0NTVGQ0Q1NzdjNWYx"; // Live Keys
         const paymentData = {
-            amount: parseFloat(booking_amount), // Amount to charge
-            payment_method: 'card',
-            currency: 'CAD', // Currency in ISO 4217 format
+            amount: parseFloat(booking_amount).toFixed(2), // Ensure it’s a valid float with two decimal points
+            payment_method: "card",
+            currency: "CAD", // Correct currency format
             card: {
                 name: card_name,
                 number: card_number,
                 expiry_month: exp_month,
                 expiry_year: exp_year,
-                cvd: cvd
+                cvd: cvd,
             },
             billing: {
-                address_line1: "123 Test Street", // Replace with actual billing address
-                address_line2: "Suite 456", // Optional
-                city: "Test City",
+                name: "Roshaan Faisal",
+                address_line1: "2340 Bromsgrove Road",
+                city: "Mississauga",
                 province: "ON",
-                postal_code: "A1A 1A1",
-                country: "CA"
-            }
+                postal_code: "L5J 4A2",
+                country: "CA",
+            },
         };
 
           
@@ -220,10 +221,25 @@ const getChatUsers = async (req, res) => {
         res.status(500).json({ message: "An error occurred while fetching chat users." });
     }
 };
+
+
+const history = async (req,res) => {
+    const { user_id } = req;
+    // return res.status(200).json({ message: "Booking History", data: { user_id } });
+    try {
+        const bookings = await Bookings.find({ user_id,status:"Completed" }).populate('host_id').populate('trailer_id');
+        return res.status(200).json({ message: "Booking History Fetched Succesfully!", bookings})
+        
+    } catch (error) {
+
+        res.status(500).json({ message: error.message });
+    }
+}
 module.exports = {
     bookingConfirm,
     getBookings,
     completeBooking,
     getBookingById,
-    getChatUsers
+    getChatUsers,
+    history
 };
