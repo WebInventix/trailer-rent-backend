@@ -226,7 +226,7 @@ const getChatUsers = async (req, res) => {
 const history = async (req,res) => {
     const { user_id } = req;
     try {
-        const bookings = await Bookings.find({ user_id });
+        const bookings = await Bookings.find({ user_id,status:"Completed" });
         return res.status(200).json({ message: "Booking History Fetched Succesfully!", bookings})
         
     } catch (error) {
