@@ -150,8 +150,8 @@ const Trailers = mongoose.model('trailers', new Schema({
     },
     status: {
         type: String,
-        enum: ['Online', 'On-Rent','Offline'],
-        default:'Online'
+        enum: ['Available', 'Unavailable'],
+        default:'Available'
 
     }
 
