@@ -59,6 +59,9 @@ const userTrailerbyCategory = async (req,res)=>{
         query.state = state
     }
 
+    query.status="Available"
+    query.approve_status="Approved"
+
     try {
         // Fetch trailers matching the query
         const trailers = await Trailers.find(query);
@@ -103,6 +106,9 @@ const trailerSearch = async (req,res) => {
         query.state = state
     }
 
+
+    query.status="Available"
+    query.approve_status="Approved"
     try {
         // Fetch trailers matching the query
         const trailers = await Trailers.find(query);

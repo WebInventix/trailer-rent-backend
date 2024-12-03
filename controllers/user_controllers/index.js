@@ -27,7 +27,7 @@ const updateProfile = async (req,res) => {
 
 const userTrailer = async (req,res)=>{
     try {
-        const trailers = await Trailers.find()
+        const trailers = await Trailers.find({approve_status:"Approved",status:"Available"})
         res.status(200).json({message: "Trailer List", data: trailers})
         
     } catch (error) {
