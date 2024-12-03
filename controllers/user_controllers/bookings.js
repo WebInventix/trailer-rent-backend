@@ -38,7 +38,16 @@ const bookingConfirm  = async (req,res) => {
               number: card_number, // Test card number
               expiry_month: exp_month,
               expiry_year: exp_year,
-              cvd: cvd
+              cvd: cvd,
+                
+            },
+            billing:{
+                address_line1: "123 Test Street", // Dummy address
+                address_line2: "Suite 456", // Optional
+                city: "Test City", // Dummy city
+                province: "ON", // Dummy province/state
+                postal_code: "A1A 1A1", // Dummy postal code
+                country: "CA" // Dummy country code (ISO 3166-1 alpha-2)
             }
           };
 
@@ -77,7 +86,7 @@ const bookingConfirm  = async (req,res) => {
             }
           });
 
-          let host_price = total_price * 0.20;
+          let host_price = total_price * 0.80;
         // Create a new booking with the provided data
         const newBooking = new Bookings({
             user_id,
