@@ -163,13 +163,17 @@ const getBookingById = async (req, res) => {
         const booking = await Bookings.findById(id).populate('user_id').populate('host_id').populate('trailer_id')
         // console.log(booking)
         const reviews = await Reviews.find({trailer_id:booking.trailer_id._id}).populate('user_id').populate('host_id')
+        let avg_rating=0;
+        let total_reviews = reviews.length;
         let user_review= false
         reviews.forEach(review => {
+            avg_rating += review.rating
             if(review.user_id.toString() === user_id){
             user_review = true;
             }
         })
-        return res.status(200).json({message:"Booking Details",data:{booking,user_review,reviews}})
+        avg_rating = avg_rating / total_reviews
+        return res.status(200).json({message:"Booking Details",data:{booking,user_review,reviews,avg_rating:avg_rating}})
         // return res.status(200).json({message:"Booking by id",data:{booking}})
     } catch (error) {
         return res.status(500).json({ message: error.message });
