@@ -27,7 +27,8 @@ const bookingConfirm  = async (req,res) => {
     const {user_id} = req
 
     try {
-        let base64Auth = "MzgzNjEyODQ0OjhmQTdlMzg5MkJDZDQ1NkU4NTUyMWYwRjc4QzM0NTY4";
+      //  let base64Auth = "MzgzNjEyODQ0OjhmQTdlMzg5MkJDZDQ1NkU4NTUyMWYwRjc4QzM0NTY4";  // Test Keys
+        let base64Auth = "Mzg3MTk0MjM4OjAyOEE2NUNkMEEwOTQ5YTA4OGE0NTVGQ0Q1NzdjNWYx"; // Live Keys
         const paymentData = {
             amount: parseFloat(booking_amount), // Amount to charge
             payment_method: 'card',
@@ -220,10 +221,24 @@ const getChatUsers = async (req, res) => {
         res.status(500).json({ message: "An error occurred while fetching chat users." });
     }
 };
+
+
+const history = async (req,res) => {
+    const { user_id } = req;
+    try {
+        const bookings = await Bookings.find({ user_id });
+        return res.status(200).json({ message: "Booking History Fetched Succesfully!", bookings})
+        
+    } catch (error) {
+
+        res.status(500).json({ message: error.message });
+    }
+}
 module.exports = {
     bookingConfirm,
     getBookings,
     completeBooking,
     getBookingById,
-    getChatUsers
+    getChatUsers,
+    history
 };
