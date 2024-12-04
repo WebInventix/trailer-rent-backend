@@ -9,6 +9,7 @@ const { generateOtp } = require("../../utils/generate_OTP");
 const {sendverficationCode, forgotOtp} = require("../../utils/email");
 const verifyEmailSchema = require("../../models/verification/verifyEmailTokenSchema");
 const { Verifications } = require("../../models/verification")
+const {Reviews} =  require('../../models/reviews')
 const twilioClient = require('../../config/twilioConfig');
 // const googleClient = require('../../config/googleConfig');
 
@@ -223,10 +224,25 @@ const login_user = async (req, res, next) => {
 const check_auth_controller = async (req, res, next) => {
   const { body, user_data, user_id, token_id } = req;
   try {
-    const nuser = await User_Auth_Schema.findOne({ _id: user_id }).select('-password');
+    let avg_rating = 0;
+    const nuser = await User_Auth_Schema.findOne({ _id: user_id }).lean().select('-password');
     if(!nuser)
     {
       return res.status(200).json({ success: false, message: 'No User Found' });
+    }
+    if(nuser.role == "Host")
+    {
+      const reviews = await Reviews.find({host_id:nuser._id})
+      let total_reviews = reviews.length;
+      reviews.forEach(review => {
+          avg_rating += review.rating
+          if(review.user_id.toString() === user_id){
+          user_review = true;
+          }
+      })
+      avg_rating = avg_rating / total_reviews
+      nuser.avg_rating = avg_rating
+      return res.status(200).json({ success: true, data: nuser });
     }
     return res.status(200).json({ success: true, data: nuser });
   } catch (error) {
