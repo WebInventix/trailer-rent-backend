@@ -5,7 +5,7 @@ const { Server } = require("socket.io");
 const cors = require('cors');
 const sockets = require('./socket');
 const fileUpload = require('express-fileupload');
-
+const startCron = require('./services/financeCron');
 const connectToMongo = require('./database');
 const all_routes = require('./routes/index');
 const error_handler = require("./middlewares/error_handler");
@@ -50,6 +50,9 @@ app.get('*', (req, res) => {
 connectToMongo()
 sockets(io);
 app.use(error_handler)
+
+//Cron Jobs
+startCron();
 
 // Start the server
 server.listen(PORT || 5000, () => {
