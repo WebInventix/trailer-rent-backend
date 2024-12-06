@@ -18,6 +18,7 @@ router.get('/get-tickets', tickets.getTickets)
 router.get('/view-ticket/:ticket_id', tickets.viewTicket)
 router.post('/add-comment', tickets.addComment)
 router.post('/update-ticket-status/:ticket_id', tickets.updateStatus)
+router.get('/finance', adminBookings.getFinance)
 
 
 

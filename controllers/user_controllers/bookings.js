@@ -27,8 +27,8 @@ const bookingConfirm  = async (req,res) => {
     const {user_id} = req
 
     try {
-      //  let base64Auth = "MzgzNjEyODQ0OjhmQTdlMzg5MkJDZDQ1NkU4NTUyMWYwRjc4QzM0NTY4";  // Test Keys
-        let base64Auth = "Mzg3MTk0MjM4OjAyOEE2NUNkMEEwOTQ5YTA4OGE0NTVGQ0Q1NzdjNWYx"; // Live Keys
+       let base64Auth = "MzgzNjEyODQ0OjhmQTdlMzg5MkJDZDQ1NkU4NTUyMWYwRjc4QzM0NTY4";  // Test Keys
+       // let base64Auth = "Mzg3MTk0MjM4OjAyOEE2NUNkMEEwOTQ5YTA4OGE0NTVGQ0Q1NzdjNWYx"; // Live Keys
         const paymentData = {
             amount: parseFloat(booking_amount).toFixed(2), // Ensure it’s a valid float with two decimal points
             payment_method: "card",
