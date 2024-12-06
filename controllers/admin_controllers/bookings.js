@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Trailers } = require("../../models/trailer")
 const {Bookings} = require('../../models/bookings')
-
+const {Finance} = require('../../models/finance')
 
 const getAllBookings = async (req,res) => {
     
@@ -27,9 +27,23 @@ const getBookingDetail = async (req,res)=> {
     }
     
 }
+
+
+const getFinance = async (req,res) => {
+    const {user_id} = req
+    try {
+        const finance = await Finance.find()
+        return res.status(200).json({message:"Finance Details", data:{finance}})
+        
+    } catch (error) {
+        return res.status(500).json({message:error.message})
+        
+    }
+}
 module.exports = {
     getAllBookings,
-    getBookingDetail
+    getBookingDetail,
+    getFinance
 };
 
 
